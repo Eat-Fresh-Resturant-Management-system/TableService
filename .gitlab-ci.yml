@@ -1,7 +1,7 @@
 variables:
   GIT_DEPTH: 1                               # Create a shallow copy
   BOT_NAME: "GitLab Runner Bot"              # Bot's name that appears in the commit log
-  BOT_EMAIL: "au656408@uni.au.dk" # Bot's email, not important
+  BOT_EMAIL: "au656408@uni.au.dk" # B
 
 build:
   # Use the official docker image.
