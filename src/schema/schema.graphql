@@ -1,0 +1,29 @@
+  type TableBooking {
+    userName: String!
+    tableName: String!
+    bookingDate: String!
+    bookingDuration: Int!
+    bookingStatus: String!
+
+  }
+
+  type Table {
+    tableId: ID!
+    tableName: String!
+    capacity: Int!
+    isAvailable: Boolean!
+  }
+
+  type Query {
+
+    getAllTableBookings: [TableBooking]
+    getAllTables: [Table]
+    getAvailableTables: [Table]
+
+  }
+
+  type Mutation {
+    createTableBooking(tableName: String!, userName: String!, bookingDuration: Int!): TableBooking
+    createTable( tableName: String!, capacity: Int!): Table
+    toggleTableAvailability(tableName: String!): Table
+  }

@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/global.json
+**/Dockerfile*
+**/.dockerignore*
+**/*.user
+**/.vs/
+node_modules
+npm-debug.log
