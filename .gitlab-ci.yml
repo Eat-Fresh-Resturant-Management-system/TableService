@@ -17,4 +17,5 @@ build:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker buildx build --push --cache-from $CI_REGISTRY_IMAGE:latest --platform linux/amd64 --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG" --tag "$CI_REGISTRY_IMAGE:latest" .
   only:
+    - main
     - tags
