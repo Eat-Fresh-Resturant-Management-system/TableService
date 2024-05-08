@@ -26,6 +26,17 @@ export const resolvers = {
     getAvailableTables: async () => {
       return await Table.find({ isAvailable: true });
     },
+    getTableBookingByUserName: async (_: any, { userName }: { userName: string }) => {
+      try {
+        const bookings = await TableBooking.find({ userName });
+        if (!bookings) {
+          throw new Error(`No bookings found for user '${userName}'.`);
+        }
+        return bookings;
+      } catch (error) {
+        throw new Error(`Failed to get bookings by user name: ${error.message}`);
+      }
+    },
   },
   Mutation: {
     createTableBooking: async (
@@ -132,6 +143,30 @@ export const resolvers = {
         throw new Error(
           `Failed to toggle table availability: ${error.message}`
         );
+      }
+    },
+    deleteTable: async (_: any, { tableName }: { tableName: string }) => {
+      try {
+        const table = await Table.findOne({ tableName });
+        if (!table) {
+          throw new Error(`Table with name '${tableName}' not found.`);
+        }
+        await table.deleteOne();
+        return { success: true, message: `Table '${tableName}' was deleted.` };
+      } catch (error) {
+        throw new Error(`Failed to delete table: ${error.message}`);
+      }
+    },
+    deleteTableBooking: async (_: any, { userName }: { userName: string }) => {
+      try {
+        const bookings = await TableBooking.find({ userName });
+        if (!bookings.length) {
+          throw new Error(`No bookings found for user '${userName}'.`);
+        }
+        await TableBooking.deleteMany({ userName });
+        return { success: true, message: `Bookings for user '${userName}' were deleted.` };
+      } catch (error) {
+        throw new Error(`Failed to delete bookings: ${error.message}`);
       }
     },
   },

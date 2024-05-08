@@ -14,7 +14,6 @@ export interface ITable extends Document {
     tableName: { type: String, unique: true },
     capacity: number;
     isAvailable: boolean;
-
 }
 
 export const table_schema = new Schema<ITable>({
