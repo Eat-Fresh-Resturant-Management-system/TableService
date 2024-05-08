@@ -1,7 +1,7 @@
 variables:
   GIT_DEPTH: 1                               # Create a shallow copy
   BOT_NAME: "GitLab Runner Bot"              # Bot's name that appears in the commit log
-  BOT_EMAIL: "au685727@uni.au.dk" # Bot's email, not important
+  BOT_EMAIL: "au656408@uni.au.dk" # Bot's email, not important
 
 build:
   # Use the official docker image.
@@ -17,5 +17,4 @@ build:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker buildx build --push --cache-from $CI_REGISTRY_IMAGE:latest --platform linux/amd64 --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG" --tag "$CI_REGISTRY_IMAGE:latest" .
   only:
-    - main
     - tags
