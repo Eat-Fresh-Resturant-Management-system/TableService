@@ -80,11 +80,8 @@ export const resolvers = {
         });
         await newTableBooking.save();
         // Publish a message containing the details of the new booking
-        await publishMessage({
-          title: 'Table Booking Created',
-          description: `A new table booking was created for table ${newTableBooking.tableName}`,
-          // Add more details of the booking as needed
-        });
+        await publishMessage(newTableBooking.tableName);
+
         // Save the new table booking
         return newTableBooking;
       } catch (error) {
