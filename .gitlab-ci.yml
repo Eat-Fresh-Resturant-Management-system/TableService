@@ -25,7 +25,7 @@ create_secret:
     - apk add --no-cache curl docker-cli  # Adding Docker CLI if necessary
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
     - |
-      kubectl create secret docker-registry registry-credentials \
+      kubectl create secret docker-registry table-credentials \
       --docker-server=$CI_REGISTRY \
       --docker-username=$CI_REGISTRY_USER \
       --docker-password=$CI_REGISTRY_PASSWORD \
