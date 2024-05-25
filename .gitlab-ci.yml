@@ -4,6 +4,7 @@ variables:
   BOT_EMAIL: "au685727@uni.au.dk"            # Bot's email, not important
   GITLAB_USER: "au656408"                    # Replace with your GitLab username
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
+  IMAGE_NAME: "registry.gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice"
 
 stages:
   - version
@@ -50,6 +51,9 @@ build:
   script:
     - docker pull "$CI_REGISTRY_IMAGE:$VERSION" || true
     - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:$VERSION" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
+  artifacts:
+    paths:
+      - VERSION
   only:
-    - tags
     - main
+    - tags
