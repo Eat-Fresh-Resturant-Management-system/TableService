@@ -40,3 +40,4 @@ const startServer = async () => {
 };
 
 connectToDatabase().then(() => startServer().catch(error => console.error("Error starting server:", error)));
+

@@ -5,6 +5,16 @@ import { Table,TableBooking } from '../models/tableModel.js'; // Import the Tabl
 // Create a new router instance
 const router = express.Router();
 
+// Define route handlers
+router.get('/', (req: Request, res: Response) => {
+    
+    //show the available endpoints in the table booking service
+    res.json({ message: 'Table booking service is up and running (Use /Graphql for Graphql queries)',
+     endpoints: ['/table-bookings', '/tables', '/tables/available',
+      '/table-bookings/:userName', '/table-bookings', '/tables',
+       '/tables/:tableName/toggle-availability', '/table-bookings/:userName',
+        '/tables/:tableName'] });
+});
 // GetTableBookings
 router.get('/table-bookings', async (req, res) => {
     try {
