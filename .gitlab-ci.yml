@@ -1,10 +1,9 @@
 variables:
   GIT_DEPTH: 1                               # Create a shallow copy
   BOT_NAME: "GitLab Runner Bot"              # Bot's name that appears in the commit log
-  BOT_EMAIL: "au685727@uni.au.dk"            # Bot's email, not important
+  BOT_EMAIL: "au656408@uni.au.dk"            # Bot's email, not important
   GITLAB_USER: "au656408"                    # Replace with your GitLab username
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
-  IMAGE_NAME: "registry.gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice:latest"
 
 stages:
   - version
