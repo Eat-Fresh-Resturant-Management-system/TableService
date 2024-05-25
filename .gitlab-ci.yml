@@ -2,7 +2,7 @@ variables:
   GIT_DEPTH: 1                               # Create a shallow copy
   BOT_NAME: "GitLab Runner Bot"              # Bot's name that appears in the commit log
   BOT_EMAIL: "au685727@uni.au.dk"            # Bot's email, not important
-  GITLAB_USER: "au656408"               # Replace with your GitLab username
+  GITLAB_USER: "au656408"                    # Replace with your GitLab username
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
 
 stages:
@@ -17,9 +17,8 @@ tag:
     - git config --global user.email "$BOT_EMAIL"
     - git config --global user.name "$BOT_NAME"
   script:
-    - export NEW_TAG=$(date +'%Y%m%d%H%M%S')
-    - git tag latest
-    - git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice.git $NEW_TAG
+    - git tag -f latest  # Create or update the tag named 'latest'
+    - git push -f https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice.git latest
   only:
     - main
 
@@ -34,6 +33,7 @@ build:
     - docker buildx create --use
   script:
     - docker pull "$CI_REGISTRY_IMAGE:latest" || true
-    - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:latest" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:${CI_COMMIT_TAG-latest}" --tag "$CI_REGISTRY_IMAGE:latest" .
+    - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:latest" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
   only:
     - tags
+    - main
