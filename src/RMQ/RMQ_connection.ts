@@ -14,7 +14,7 @@ let channel: AmqpPublishSubscribe | undefined;
 // Establishes a connection to the server
 export async function connectToRabbitMQ() {
   try {
-    await amqp.connect(`amqp://guest:guest@rabbitmq-service:5672`);
+    await amqp.connect("amqp://guest:guest@rabbitmq-service:5672");
     channel = await amqp.createPublisherAndSubscriber(exchangeName) as AmqpPublishSubscribe;
 
     console.log('Connected to RabbitMQ server');
