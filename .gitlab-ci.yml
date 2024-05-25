@@ -4,7 +4,7 @@ variables:
   BOT_EMAIL: "au656408@uni.au.dk"            # Bot's email, not important
   GITLAB_USER: "au656408"                    # Replace with your GitLab username
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
-  IMAGE_NAME: 'registry.gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice' # Path to your Docker image in the GitLab Container Registry
+  IMAGE_NAME: "registry.gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice" # Path to your Docker image in the GitLab Container Registry
 
 stages:
   - version
@@ -41,6 +41,8 @@ version:
 build:
   image: griefed/docker-with-buildx:latest
   stage: build
+  dependencies:
+    - version
   services:
     - docker:dind
   before_script:
