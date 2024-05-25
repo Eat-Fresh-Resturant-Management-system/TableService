@@ -5,7 +5,7 @@ const amqp = new Amqp();
 // RabbitMQ configuration
 const rmqUser = 'guest';
 const rmqPass = 'guest';
-const rmqHost = 'rabbitmq';
+const rmqHost = 'rabbitmq-service';
 const rmqPort = '5672';
 const queueName = 'table_booking_queue'; // Define queue name
 const exchangeName = 'table_booking_exchange'; // Define exchange name
