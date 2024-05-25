@@ -1,10 +1,9 @@
 variables:
   GIT_DEPTH: 1                               # Create a shallow copy
   BOT_NAME: "GitLab Runner Bot"              # Bot's name that appears in the commit log
-  BOT_EMAIL: "au656408@uni.au.dk"            # Bot's email, not important
+  BOT_EMAIL: "au685727@uni.au.dk"            # Bot's email, not important
   GITLAB_USER: "au656408"                    # Replace with your GitLab username
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
-  IMAGE_NAME: "registry.gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice" #Docker image in the GitLab Container Registry
 
 stages:
   - version
@@ -20,7 +19,7 @@ version:
   script:
     - |
       # Determine the next version tag based on the latest Git tag
-      LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0")
+      LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
       echo "Latest tag: $LATEST_TAG"
       if [[ "$LATEST_TAG" =~ ^v[0-9]+ ]]; then
         VERSION_NUMBER=${LATEST_TAG:1}
@@ -49,8 +48,8 @@ build:
     - docker buildx create --use
     - export VERSION=$(cat VERSION)
   script:
-    - docker pull "$IMAGE_NAME:$VERSION" || true
-    - docker buildx build --push --tag "$IMAGE_NAME:$VERSION" --platform linux/arm64/v8,linux/amd64 --tag "$IMAGE_NAME:latest" .
+    - docker pull "$CI_REGISTRY_IMAGE:$latest" || true
+    - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:$VERSION" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
   only:
-    - main
     - tags
+    - main
