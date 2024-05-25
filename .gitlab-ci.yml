@@ -16,7 +16,7 @@ tag:
     - git config --global user.name "$BOT_NAME"
     - export NEW_TAG=$(date +'%Y%m%d%H%M%S')
     - git tag $NEW_TAG
-    - git push origin $NEW_TAG
+    - git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice.git $NEW_TAG
   only:
     - main
 
