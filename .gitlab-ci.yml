@@ -6,19 +6,34 @@ variables:
   GITLAB_TOKEN: "glpat-Sy9678A5EgwRAN5djdZa" # Replace with your personal access token
 
 stages:
-  - tag
+  - version
   - build
 
-tag:
+version:
   image: alpine:latest
-  stage: tag
+  stage: version
   before_script:
     - apk add --no-cache git
     - git config --global user.email "$BOT_EMAIL"
     - git config --global user.name "$BOT_NAME"
   script:
-    - git tag -f latest  # Create or update the tag named 'latest'
-    - git push -f https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice.git latest
+    - |
+      # Determine the next version tag based on the latest Git tag
+      LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+      echo "Latest tag: $LATEST_TAG"
+      if [[ "$LATEST_TAG" =~ ^v[0-9]+ ]]; then
+        VERSION_NUMBER=${LATEST_TAG:1}
+        NEW_VERSION=v$(($VERSION_NUMBER + 1))
+      else
+        NEW_VERSION=v1
+      fi
+      echo "New version: $NEW_VERSION"
+      echo $NEW_VERSION > VERSION
+    - git tag $NEW_VERSION
+    - git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.au.dk/wao-exercises1/eatfresh/eatfresh.tablebookingservice.git $NEW_VERSION
+  artifacts:
+    paths:
+      - VERSION
   only:
     - main
 
@@ -31,9 +46,10 @@ build:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use
+    - export VERSION=$(cat VERSION)
   script:
-    - docker pull "$CI_REGISTRY_IMAGE:latest" || true
-    - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:latest" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
+    - docker pull "$CI_REGISTRY_IMAGE:$VERSION" || true
+    - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:$VERSION" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
   only:
     - tags
     - main
