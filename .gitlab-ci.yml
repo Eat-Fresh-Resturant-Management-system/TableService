@@ -52,7 +52,6 @@ build:
     - docker buildx create --use
   script:
     - export VERSION=$(cat VERSION)
-    - echo "Using version: $VERSION"
     - docker pull "$CI_REGISTRY_IMAGE:$VERSION" || true
     - docker buildx build --push --tag "$CI_REGISTRY_IMAGE:$VERSION" --platform linux/arm64/v8,linux/amd64 --tag "$CI_REGISTRY_IMAGE:latest" .
   artifacts:
