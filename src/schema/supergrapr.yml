@@ -1,0 +1,5 @@
+subgraphs:
+  TableBooking:
+    routing_url: https://localhost:4000/graphql
+    schema:
+      file: schema.graphql

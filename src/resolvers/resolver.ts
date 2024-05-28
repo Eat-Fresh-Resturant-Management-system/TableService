@@ -25,6 +25,7 @@ export const resolvers = {
       return await TableBooking.find();
     },
     getAllTables: async () => {
+      console.log("getAllTables");
       return await Table.find();
     },
     getAvailableTables: async () => {
