@@ -1,11 +1,11 @@
-import {AmqpPublishSubscribe, Amqp } from 'typescript-amqp';
+import { AmqpPublishSubscribe, Amqp } from 'typescript-amqp';
 
 const amqp = new Amqp();
 
 // RabbitMQ configuration
 const rmqUser = 'guest';
 const rmqPass = 'guest';
-const rmqHost = 'rabbitmq-service';
+const rmqHost = 'rabbitmq';
 const rmqPort = '5672';
 const queueName = 'table_booking_queue'; // Define queue name
 const exchangeName = 'table_booking_exchange'; // Define exchange name
@@ -15,7 +15,7 @@ let channel: AmqpPublishSubscribe | undefined;
 export async function connectToRabbitMQ() {
   try {
     await amqp.connect(`amqp://${rmqUser}:${rmqPass}@${rmqHost}:${rmqPort}`);
-    
+
     channel = await amqp.createPublisherAndSubscriber(exchangeName) as AmqpPublishSubscribe;
 
     console.log('Connected to RabbitMQ server');
