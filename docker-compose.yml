@@ -17,7 +17,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     networks:
-      - EatFresh_network
+      - EatFresh_network  # Assigning to custom network
 
   mongo:
     image: mongo
@@ -28,19 +28,19 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     networks:
-      - EatFresh_network
+      - EatFresh_network  # Assigning to custom network
   
   rabbitmq:
     image: rabbitmq:3-management
     restart: always
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"  # RabbitMQ port
+      - "15672:15672"  # RabbitMQ management UI port
     environment:
       RABBITMQ_DEFAULT_USERNAME: guest
       RABBITMQ_DEFAULT_PASSWORD: guest
     networks:
-      - EatFresh_network
+      - EatFresh_network  # Assigning to custom network
 
   tablebookingapp:
     depends_on:
@@ -55,6 +55,4 @@ services:
     environment:
       PORT_ARG: 4000
     networks:
-      - EatFresh_network
-
-
+      - EatFresh_network  # Assigning to custom network
