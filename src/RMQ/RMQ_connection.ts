@@ -1,4 +1,4 @@
-import {AmqpPublishSubscribe, Amqp } from 'typescript-amqp';
+import { AmqpPublishSubscribe, Amqp } from 'typescript-amqp';
 
 const amqp = new Amqp();
 
@@ -15,7 +15,7 @@ let channel: AmqpPublishSubscribe | undefined;
 export async function connectToRabbitMQ() {
   try {
     await amqp.connect(`amqp://${rmqUser}:${rmqPass}@${rmqHost}:${rmqPort}`);
-    
+
     channel = await amqp.createPublisherAndSubscriber(exchangeName) as AmqpPublishSubscribe;
 
     console.log('Connected to RabbitMQ server');
