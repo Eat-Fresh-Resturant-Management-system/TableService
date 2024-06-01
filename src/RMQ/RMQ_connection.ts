@@ -2,11 +2,10 @@ import { AmqpPublishSubscribe, Amqp } from 'typescript-amqp';
 
 const amqp = new Amqp();
 
-// RabbitMQ configuration
-const rmqUser = 'guest';
-const rmqPass = 'guest';
-const rmqHost = 'rabbitmq-service';
-const rmqPort = '5672';
+const rmqUser = process.env.RMQ_USER || 'guest';
+const rmqPass = process.env.RMQ_PASS || 'guest';
+const rmqHost = process.env.RMQ_HOST || 'rabbitmq.rabbitmq.svc.cluster.local';
+const rmqPort = process.env.RMQ_PORT || '5672';
 const queueName = 'table_booking_queue'; // Define queue name
 const exchangeName = 'table_booking_exchange'; // Define exchange name
 
