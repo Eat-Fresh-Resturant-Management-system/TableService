@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 export async function connectToDatabase() {
     try {
-      await mongoose.connect('mongodb://root:example@-service:27017/', { dbName: "TableBooking" });
+      await mongoose.connect('mongodb://root:example@mongo-service:27017/', { dbName: "TableBooking" });
       console.log("Connected to MongoDB");
   
     //   await startServer();
