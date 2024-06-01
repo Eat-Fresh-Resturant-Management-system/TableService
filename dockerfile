@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20.11.1
+FROM node:latest AS build
 # Set working directory in the container
 WORKDIR /app
 # Copy package.json and package-lock.json
