@@ -8,6 +8,9 @@ import { job } from './workers/Table_bg_worker.js';
 import router from './routes/tableBookingRouter';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { gql } from 'apollo-server-express';
+import { auth } from 'express-oauth2-jwt-bearer';
+
+
 // const typeDefs = gql(readFileSync('src/schema/schema.graphql','utf-16le' ));
 
 const typeDefs = gql`
@@ -55,6 +58,16 @@ const startServer = async () => {
         schema: buildSubgraphSchema({ typeDefs, resolvers })
     });
 
+    const jwtCheck = auth({
+      audience: 'https://swwao.orbit.au.dk/grp-13',
+      issuerBaseURL: 'https://dev-feeu3ze3mjv64zbn.eu.auth0.com/',
+      tokenSigningAlg: 'RS256'
+    });
+    
+    // Enforce JWT authentication on all endpoints
+    app.use(jwtCheck);
+    
+    
     await server.start();
     server.applyMiddleware({ app });
 
@@ -73,7 +86,7 @@ const startServer = async () => {
     setTimeout(async () => {
         try {
             await connectToRabbitMQ();
-            await job.start();
+            // await job.start();
         } catch (error) {
             console.error("Error connecting to RabbitMQ:", error);
         }
