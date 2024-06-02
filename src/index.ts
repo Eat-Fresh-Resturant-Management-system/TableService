@@ -65,7 +65,7 @@ const startServer = async () => {
     });
     
     // Enforce JWT authentication on all endpoints
-    app.use(jwtCheck);
+    // app.use(jwtCheck);
     
     
     await server.start();
