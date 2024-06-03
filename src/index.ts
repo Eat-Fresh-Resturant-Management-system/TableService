@@ -30,10 +30,10 @@ const startServer = async () => {
   const { url } = await startStandaloneServer(server, {
     context: async ({ req }) => {
       // JWT check can be added to the context
-      const token = req.headers.authorization || '';
-      await jwtCheck(req, {}, () => {}); // Apply JWT check middleware
-      return { token };
-    },
+      // const token = req.headers.authorization || '';
+      // // await jwtCheck(req, {}, () => {}); // Apply JWT check middleware
+    //   return { token };
+     },
     listen: { port: 4000 },
   });
 
