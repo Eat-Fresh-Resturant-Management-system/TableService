@@ -11,45 +11,45 @@ import { gql } from 'apollo-server-express';
 import { auth } from 'express-oauth2-jwt-bearer';
 
 
-// const typeDefs = gql(readFileSync('src/schema/schema.graphql','utf-16le' ));
+const typeDefs = gql(readFileSync('src/schema/schema.graphql','utf-16le' ));
 
-const typeDefs = gql`
-type schema {
-    query: Query
-    mutation: Mutation
-  }
+// const typeDefs = gql`
+// type schema {
+//     query: Query
+//     mutation: Mutation
+//   }
   
-  type TableBooking {
-    id: ID!
-    userName: String!
-    tableName: String!
-    bookingDate: String!
-    bookingDuration: Int!
-    bookingStatus: String!
-  }
+//   type TableBooking {
+//     id: ID!
+//     userName: String!
+//     tableName: String!
+//     bookingDate: String!
+//     bookingDuration: Int!
+//     bookingStatus: String!
+//   }
   
-  type Table {
-    tableId: ID!
-    tableName: String!
-    capacity: Int!
-    isAvailable: Boolean!
-  }
+//   type Table {
+//     tableId: ID!
+//     tableName: String!
+//     capacity: Int!
+//     isAvailable: Boolean!
+//   }
   
-  type Query {
-    getAllTableBookings: [TableBooking]
-    getAllTables: [Table]
-    getAvailableTables: [Table]
-    getTableBookingByUserName(userName: String!): [TableBooking]
-  }
+//   type Query {
+//     getAllTableBookings: [TableBooking]
+//     getAllTables: [Table]
+//     getAvailableTables: [Table]
+//     getTableBookingByUserName(userName: String!): [TableBooking]
+//   }
   
-  type Mutation {
-    createTableBooking(tableName: String!, userName: String!, bookingDuration: Int!): TableBooking
-    createTable(tableName: String!, capacity: Int!): Table
-    toggleTableAvailability(tableName: String!): Table
-    deleteTableBooking(userName: String!): TableBooking
-    deleteTable(tableName: String!): Table
-  }
-  `;
+//   type Mutation {
+//     createTableBooking(tableName: String!, userName: String!, bookingDuration: Int!): TableBooking
+//     createTable(tableName: String!, capacity: Int!): Table
+//     toggleTableAvailability(tableName: String!): Table
+//     deleteTableBooking(userName: String!): TableBooking
+//     deleteTable(tableName: String!): Table
+//   }
+//   `;
 
 
 const startServer = async () => {
