@@ -1,4 +1,5 @@
-import { ApolloServer } from '@apollo/server';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 import { readFileSync } from 'fs';
 import { resolvers } from './resolvers/resolver';
 import { connectToDatabase } from './DB/mongodb';
@@ -7,47 +8,77 @@ import { job } from './workers/Table_bg_worker.js';
 import router from './routes/tableBookingRouter';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { gql } from 'apollo-server-express';
-import { auth } from 'express-oauth2-jwt-bearer';
-import { startStandaloneServer } from '@apollo/server/standalone';
-import express from 'express';
+// const typeDefs = gql(readFileSync('src/schema/schema.graphql','utf-16le' ));
 
-// Load type definitions from GraphQL schema file
-const typeDefs = gql(readFileSync('src/schema/schema.graphql', 'utf-8'));
+const typeDefs = gql`
+type schema {
+    query: Query
+    mutation: Mutation
+  }
+  
+  type TableBooking {
+    id: ID!
+    userName: String!
+    tableName: String!
+    bookingDate: String!
+    bookingDuration: Int!
+    bookingStatus: String!
+  }
+  
+  type Table {
+    tableId: ID!
+    tableName: String!
+    capacity: Int!
+    isAvailable: Boolean!
+  }
+  
+  type Query {
+    getAllTableBookings: [TableBooking]
+    getAllTables: [Table]
+    getAvailableTables: [Table]
+    getTableBookingByUserName(userName: String!): [TableBooking]
+  }
+  
+  type Mutation {
+    createTableBooking(tableName: String!, userName: String!, bookingDuration: Int!): TableBooking
+    createTable(tableName: String!, capacity: Int!): Table
+    toggleTableAvailability(tableName: String!): Table
+    deleteTableBooking(userName: String!): TableBooking
+    deleteTable(tableName: String!): Table
+  }
+  `;
 
-// JWT middleware setup
-const jwtCheck = auth({
-  audience: 'https://swwao.orbit.au.dk/grp-13',
-  issuerBaseURL: 'https://dev-feeu3ze3mjv64zbn.eu.auth0.com/',
-  tokenSigningAlg: 'RS256'
-});
 
 const startServer = async () => {
-  const server = new ApolloServer({
-    schema: buildSubgraphSchema({ typeDefs, resolvers }),
-  });
+    const app = express();
+    const server = new ApolloServer({
+        schema: buildSubgraphSchema({ typeDefs, resolvers })
+    });
+    await server.start();
+    server.applyMiddleware({ app });
 
-  // Start the standalone server with required context and middleware
-  const { url } = await startStandaloneServer(server, {
-    context: async ({ req }) => {
-      // JWT check can be added to the context
-      // const token = req.headers.authorization || '';
-      // // await jwtCheck(req, {}, () => {}); // Apply JWT check middleware
-    //   return { token };
-     },
-    listen: { port: 4000 },
-  });
+    // Middleware for parsing JSON requests
+    app.use(express.json());
 
-  console.log(`🚀 Server ready at ${url}`);
+    // Mount route handlers
+    app.use('/', router);
 
-  // Adding a 15-second delay before connecting to RabbitMQ
-  setTimeout(async () => {
-    try {
-      await connectToRabbitMQ();
-      // await job.start();
-    } catch (error) {
-      console.error("Error connecting to RabbitMQ:", error);
-    }
-  }, 15000); // 15 seconds in milliseconds
+    // Start the server
+    app.listen(4000, () => {
+        console.log(`🚀 Server ready at ${server.graphqlPath}`);
+    });1
+
+    await 
+
+    // Adding a 15-second delay before connecting to RabbitMQ
+    setTimeout(async () => {
+        try {
+            await connectToRabbitMQ();
+            await job.start();
+        } catch (error) {
+            console.error("Error connecting to RabbitMQ:", error);
+        }
+    }, 15000); // 15 seconds in milliseconds
 };
 
 connectToDatabase().then(() => startServer().catch(error => console.error("Error starting server:", error)));
