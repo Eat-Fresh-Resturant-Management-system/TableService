@@ -6,7 +6,7 @@ import { connectToRabbitMQ } from './RMQ/RMQ_connection';
 import { job } from './workers/Table_bg_worker.js';
 import router from './routes/tableBookingRouter';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import { gql } from '@apollo/server';
+import { gql } from 'apollo-server-express';
 import { auth } from 'express-oauth2-jwt-bearer';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import express from 'express';
