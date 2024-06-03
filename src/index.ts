@@ -74,7 +74,7 @@ const startServer = async () => {
     setTimeout(async () => {
         try {
             await connectToRabbitMQ();
-            await job.start();
+            // await job.start();
         } catch (error) {
             console.error("Error connecting to RabbitMQ:", error);
         }
