@@ -8,10 +8,10 @@ import { job } from './workers/Table_bg_worker.js';
 import router from './routes/tableBookingRouter';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { gql } from 'apollo-server-express';
-// const typeDefs = gql(readFileSync('src/schema/schema.graphql','utf-16le' ));
+import { auth } from 'express-oauth2-jwt-bearer';
 
 const typeDefs = gql`
-type schema {
+  type schema {
     query: Query
     mutation: Mutation
   }
@@ -46,39 +46,56 @@ type schema {
     deleteTableBooking(userName: String!): TableBooking
     deleteTable(tableName: String!): Table
   }
-  `;
-
+`;
 
 const startServer = async () => {
-    const app = express();
-    const server = new ApolloServer({
-        schema: buildSubgraphSchema({ typeDefs, resolvers })
-    });
-    await server.start();
-    server.applyMiddleware({ app });
+  const app = express();
 
-    // Middleware for parsing JSON requests
-    app.use(express.json());
+  const jwtCheck = auth({
+    audience: 'https://swwao.orbit.au.dk/grp-13',
+    issuerBaseURL: 'https://dev-feeu3ze3mjv64zbn.eu.auth0.com/',
+    tokenSigningAlg: 'RS256'
+  });
 
-    // Mount route handlers
-    app.use('/', router);
+  // Enforce JWT authentication on all endpoints
+  app.use(jwtCheck);
 
-    // Start the server
-    app.listen(4000, () => {
-        console.log(`🚀 Server ready at ${server.graphqlPath}`);
-    });1
+  const server = new ApolloServer({
+    schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    context: ({ req }) => {
+      const token = req.headers.authorization || '';
+      if (!token) {
+        throw new Error('Authorization token is missing');
+      }
+      return { token };
+    }
+  });
 
-    await 
+  await server.start();
+  server.applyMiddleware({ app });
 
-    // Adding a 15-second delay before connecting to RabbitMQ
-    setTimeout(async () => {
-        try {
-            await connectToRabbitMQ();
-            // await job.start();
-        } catch (error) {
-            console.error("Error connecting to RabbitMQ:", error);
-        }
-    }, 15000); // 15 seconds in milliseconds
+  // Middleware for parsing JSON requests
+  app.use(express.json());
+
+  // Mount route handlers
+  app.use('/', router);
+
+  // Start the server
+  app.listen(4000, () => {
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  });
+
+  // Adding a 15-second delay before connecting to RabbitMQ
+  setTimeout(async () => {
+    try {
+      await connectToRabbitMQ();
+      // await job.start();
+    } catch (error) {
+      console.error("Error connecting to RabbitMQ:", error);
+    }
+  }, 15000); // 15 seconds in milliseconds
 };
 
-connectToDatabase().then(() => startServer().catch(error => console.error("Error starting server:", error)));
+connectToDatabase()
+  .then(() => startServer())
+  .catch(error => console.error("Error starting server:", error));
